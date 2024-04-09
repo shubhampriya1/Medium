@@ -6,25 +6,19 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import connectDB from "./lib/db.js";
+import authRouter from "./routes/auth.route.js";
 
-// Load environment variables
 dotenv.config();
 
-// Create an instance of Express
 const app = express();
 
-// Set up middleware
 app.use(cors());
 app.use(express.json());
 
-// Define routes
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+app.use("/auth", authRouter);
 
 const PORT = process.env.PORT || 8080;
 
-// create a IIFF function to start the server
 (async () => {
   connectDB()
     .then(() => {
