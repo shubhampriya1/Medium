@@ -16,6 +16,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (_, res) => {
+  return res.status(200).send("<h1/>Welcome to blog backend made by Shubham Priya</h1>");
+});
 app.use("/auth", authRouter);
 app.use("/blog", blogRouter);
 

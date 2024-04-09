@@ -1,4 +1,5 @@
 import BlogU from "../modals/blog.modal.js";
+import User from "../modals/user.modal.js";
 
 export async function createBlog(req, res) {
   try {
@@ -14,7 +15,17 @@ export async function createBlog(req, res) {
       return res.status(400).send("Please fill your all details");
     }
 
- 
+    let user;
+
+    try {
+      user = User.findById(data.username);
+    } catch (error) {
+      user = null;
+    }
+
+    if (!user) {
+      return res.status(403).send("You are not authorised");
+    }
 
     const newblog = new BlogU({
       author: data.username,
@@ -56,7 +67,7 @@ export async function readBlog(req, res) {
       return res.status(400).send("Please fill your all details");
     }
 
-    const blogbyId = await BlogU.findById(data.id);
+    const blogbyId = await BlogU.findById(data.id).populate("author");
     return res.status(200).json(blogbyId);
   } catch (error) {
     console.log(error);
@@ -64,9 +75,9 @@ export async function readBlog(req, res) {
   }
 }
 
-export async function readALLBlog(req, res) {
+export async function readALLBlog(_, res) {
   try {
-    const blogs = await BlogU.find();
+    const blogs = await BlogU.find().populate("author");
     return res.status(200).json(blogs);
   } catch (error) {
     console.log(error);
