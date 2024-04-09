@@ -1,5 +1,5 @@
 import User from "../modals/user.modal.js";
-import bcryptjs from 'bcryptjs';
+
 //identifier and password
 
 export async function login(req, res) {

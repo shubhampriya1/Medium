@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 
 import connectDB from "./lib/db.js";
 import authRouter from "./routes/auth.route.js";
+import blogRouter from "./routes/blog.route.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRouter);
+app.use("/blog", blogRouter);
 
 const PORT = process.env.PORT || 8080;
 
