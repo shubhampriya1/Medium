@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import BlogU from "../modals/blog.modal.js";
 import User from "../modals/user.modal.js";
 
@@ -87,25 +89,44 @@ export async function readALLBlog(_, res) {
 
 export async function editBlog(req, res) {
   try {
-    const data2 = req.body;
+    const data = req.body;
+
+    if (!data.id) {
+      return res.status(400).send("Please fill your all details");
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(data.id)) {
+      return res.status(400).send("Please fill your all details");
+    }
 
     if (
-      !data2.username ||
-      !data2.img ||
-      !data2.title ||
-      !data2.slug ||
-      !data2.content
+      !data.username ||
+      !data.img ||
+      !data.title ||
+      !data.slug ||
+      !data.content
     ) {
       return res.status(400).send("Please fill your all details");
     }
 
-    await BlogU.findByIdAndUpdate(data2.id, {
-      author: data2.username,
-      img: data2.img,
-      title: data2.title,
-      slug: data2.slug,
-      content: data2.content,
-    });
+    const user = await User.findById(data.username);
+
+    if (!user) {
+      return res.status(403).send("You are not authorised");
+    }
+
+    const blog = await BlogU.findById(data.id);
+
+    if (!blog) {
+      return res.status(404).send("Blog not found");
+    }
+
+    blog.img = data.img;
+    blog.title = data.title;
+    blog.slug = data.slug;
+    blog.content = data.content;
+
+    await blog.save();
     return res.status(200).send("sucessfully updated your Blog");
   } catch (error) {
     console.log(error);
