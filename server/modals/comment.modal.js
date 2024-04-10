@@ -7,7 +7,7 @@ const commentSchema = mongoose.Schema({
     require: true,
   },
   rating: {
-    type: Integer,
+    type: String,
     require: true,
   },
   text: {

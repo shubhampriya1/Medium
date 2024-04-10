@@ -47,7 +47,7 @@ export async function createBlog(req, res) {
 
 export async function deleteBlog(req, res) {
   try {
-    const data = req.param;
+    const data = req.params;
     if (!data.id) {
       return res.status(400).send("Please fill your all details");
     }
