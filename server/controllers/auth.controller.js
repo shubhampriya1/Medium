@@ -1,6 +1,5 @@
 import User from "../modals/user.modal.js";
-
-//identifier and password
+import bcrytpjs from "bcryptjs";
 
 export async function login(req, res) {
   try {
@@ -9,11 +8,25 @@ export async function login(req, res) {
     if (!identifier || !password) {
       return res.status(400).send("please fill your all detsils");
     }
-    const email1 = await User.findOne({
+    const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
-    console.log(email1);
-    res.status(200).send("succesfully you had login");
+
+    if (!user) {
+      return res.status(404).send("No user with provided credentials found");
+    }
+
+    const isMatch = bcrytpjs.compare(user.password, password);
+
+    if (!isMatch) {
+      return res.status(404).send("Password in incorrect");
+    }
+
+    res.status(200).json({
+      userId: user._id,
+      username: user.username,
+      useremail: user.email,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");
@@ -53,7 +66,11 @@ export async function register(req, res) {
 
     await newuser.save();
 
-    return res.status(200).send("succesfully created your account");
+    return res.status(200).json({
+      userId: newuser._id,
+      username: newuser.username,
+      useremail: newuser.email,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");

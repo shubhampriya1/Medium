@@ -1,5 +1,9 @@
 function LoginPage() {
-  return <div>Login Page</div>;
+  return <div>
+    <div className="container">
+      dfff
+    </div>
+  </div>;
 }
 
 export default LoginPage;
