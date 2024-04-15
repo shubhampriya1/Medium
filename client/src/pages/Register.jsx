@@ -19,7 +19,7 @@ function RegisterPage() {
         <CardTitle>Create Account</CardTitle>
         <CardDescription>
           Already have an account?{" "}
-          <Link to={"/login"} className="text-sky-400">
+          <Link to={"/login"} className="underline">
             Login
           </Link>
         </CardDescription>
