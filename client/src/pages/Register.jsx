@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { setUserData } from "@/lib/user";
 
 function RegisterPage() {
   const [name, setName] = useState("");
@@ -26,14 +27,14 @@ function RegisterPage() {
     const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
 
     try {
-      const response = await axios.post(`${backendURL}/auth/register`, {
+      const { data } = await axios.post(`${backendURL}/auth/register`, {
         name: name,
         username: username,
         password: password,
         email: email,
       });
 
-      console.log(response);
+      setUserData(data.username, data.useremail, data.userId);
       toast.success("Successfully created your account");
     } catch (error) {
       toast.error(error.response.data);
