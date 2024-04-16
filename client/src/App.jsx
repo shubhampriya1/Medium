@@ -2,8 +2,6 @@ import React from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import "./App.css";
-
 const LoginPage = React.lazy(() => import("./pages/Login"));
 const RegisterPage = React.lazy(() => import("./pages/Register"));
 const HomePage = React.lazy(() => import("./pages/Home"));

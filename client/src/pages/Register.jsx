@@ -1,3 +1,8 @@
+import { useState } from "react";
+
+import { Link } from "react-router-dom";
+import axios from "axios";
+
 import {
   Card,
   CardContent,
@@ -6,13 +11,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 function RegisterPage() {
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function onSubmit() {
+    const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
+
+    try {
+      const response = await axios.post(`${backendURL}/auth/register`, {
+        name: name,
+        username: username,
+        password: password,
+        email: email,
+      });
+
+      console.log(response);
+      toast.success("Successfully created your account");
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  }
+
   return (
     <Card className="w-[350px]  md:w-96 m-auto my-16">
       <CardHeader>
@@ -29,19 +56,43 @@ function RegisterPage() {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col items-start gap-1 space-y-1.5">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Your name" />
+              <Input
+                id="name"
+                placeholder="Your name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div className="flex flex-col items-start gap-1 space-y-1.5">
               <Label htmlFor="username">Username</Label>
-              <Input id="username" placeholder="Username" />
+              <Input
+                id="username"
+                placeholder="Username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
             <div className="flex flex-col items-start gap-1 space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="johndoe@example.com" />
+              <Input
+                id="email"
+                placeholder="johndoe@example.com"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="flex flex-col items-start gap-1 space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" placeholder="Enter your password" />
+              <Input
+                id="password"
+                placeholder="Enter your password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
           </div>
         </form>
@@ -50,7 +101,7 @@ function RegisterPage() {
         <Link to={"/"}>
           <Button variant="outline">Cancel</Button>
         </Link>
-        <Button>Submit</Button>
+        <Button onClick={onSubmit}>Submit</Button>
       </CardFooter>
     </Card>
   );
