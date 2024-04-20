@@ -5,7 +5,7 @@ function Navbar() {
   const { userid } = getUserData();
 
   return (
-    <div className="p-5 bg-transparent flex items-center justify-between">
+    <div className="p-5 bg-transparent flex items-center justify-between  fixed top-0 z-10">
       <div className="text-2xl font-semibold flex gap-3">
         <MountainIcon />
         <div>
