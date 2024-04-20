@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,18 @@ const AddBlog = () => {
   const navigate = useNavigate();
 
   const { userid } = getUserData();
+
+  useEffect(() => {
+    if (!userid) {
+      navigate("/");
+    }
+  }, [userid, navigate]);
+
+  const disabled =
+    title.length < 10 ||
+    slug.length < 10 ||
+    img.length < 10 ||
+    content.length < 30;
 
   async function onSubmit() {
     try {
@@ -64,6 +77,9 @@ const AddBlog = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          <p className="text-sm text-muted-foreground">
+            Title must be more than 10 characters
+          </p>
         </div>
       </div>
       <div className="grid w-full items-center gap-4">
@@ -76,6 +92,9 @@ const AddBlog = () => {
             value={img}
             onChange={(e) => setImg(e.target.value)}
           />
+          <p className="text-sm text-muted-foreground">
+            This is image url of your blog
+          </p>
         </div>
       </div>
       <div className="grid w-full items-center gap-4">
@@ -89,7 +108,7 @@ const AddBlog = () => {
             onChange={(e) => setSlug(e.target.value)}
           />
           <p className="text-sm text-muted-foreground">
-            This is description content of your blog
+            Slug must be more than 10 characters
           </p>
         </div>
       </div>
@@ -104,14 +123,14 @@ const AddBlog = () => {
             onChange={(e) => setContent(e.target.value)}
           />
           <p className="text-sm text-muted-foreground">
-            This is main content of your blog
+            Content must be more than 30 characters
           </p>
         </div>
       </div>
       <Button
         className="w-full md:w-auto mx-auto"
         onClick={onSubmit}
-        disabled={loading}
+        disabled={loading || disabled}
       >
         Add Blog
       </Button>

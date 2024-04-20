@@ -17,13 +17,11 @@ export async function createBlog(req, res) {
       return res.status(400).send("Please fill your all details");
     }
 
-    let user;
-
-    try {
-      user = User.findById(data.username);
-    } catch (error) {
-      user = null;
+    if (!mongoose.Types.ObjectId.isValid(data.username)) {
+      return res.status(400).send("Please fill your all details");
     }
+
+    const user = await User.findById(data.username);
 
     if (!user) {
       return res.status(403).send("You are not authorised");
