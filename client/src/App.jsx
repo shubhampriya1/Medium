@@ -2,11 +2,12 @@ import React from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const LoginPage = React.lazy(() => import("./pages/Login"));
-const RegisterPage = React.lazy(() => import("./pages/Register"));
-const HomePage = React.lazy(() => import("./pages/Home"));
-const BlogPage = React.lazy(() => import("./pages/Blogs"));
-const BlogIdPage = React.lazy(() => import("./pages/BlogId"));
+import HomePage from "./pages/Home";
+import BlogPage from "./pages/Blogs";
+import BlogIdPage from "./pages/BlogId";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import AddBlogPage from "./pages/AddBlog";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/blog/:id" element={<BlogIdPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/addblog" element={<AddBlogPage />} />
       </Routes>
     </Router>
   );

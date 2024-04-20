@@ -40,7 +40,13 @@ function BlogPage() {
   if (error) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
-        <Loader2 size={40} className="animate-spin" />
+        <div className="flex flex-col items-center justify-center">
+          <TriangleAlert size={100} className="text-rose-900" />
+          <h1 className="text-xl">No blog found🥲🥲</h1>
+        </div>
+        <Link to={"/"}>
+          <Button>Go to Home</Button>
+        </Link>
       </div>
     );
   }
