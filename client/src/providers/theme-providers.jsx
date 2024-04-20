@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
 
-// Your component definition here...
-
 const initialState = {
   theme: "system",
   setTheme: () => null,

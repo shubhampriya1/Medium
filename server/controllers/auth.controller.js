@@ -16,7 +16,7 @@ export async function login(req, res) {
       return res.status(404).send("No user with provided credentials found");
     }
 
-    const isMatch = await bcrytpjs.compare(user.password, password);
+    const isMatch = await bcrytpjs.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(404).send("Password in incorrect");

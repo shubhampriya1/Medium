@@ -52,12 +52,13 @@ function BlogPage() {
   }
 
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto">
+      <h1 className="text-center text-3xl 2xl:text-4xl font-bold my-10 md:my-16">
+        Explore all our blogs
+      </h1>
       {blogs.length != 0 ? (
-        <div className="flex items-center flex-col md:flex-row gap-10 mt-10 md:mt-20 md:mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {blogs.map((i) => (
-            // <div>{i.title}</div>
-
             <Card
               key={i._id}
               title={i.title}
