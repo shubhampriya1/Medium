@@ -7,7 +7,7 @@ import User from "../modals/user.modal.js";
 export async function addComment(req, res) {
   try {
     const { authorId, rating, blogId, text } = req.body;
-    
+
     if (!authorId || !rating || !blogId || !text) {
       return res.status(400).send("Please fill your all details");
     }
@@ -37,7 +37,10 @@ export async function addComment(req, res) {
       text,
     });
 
+    blog.comments.push(comment);
+
     await comment.save();
+    await blog.save();
 
     return res.status(200).send("Successfully saved your comment");
   } catch (error) {

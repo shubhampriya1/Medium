@@ -1,4 +1,5 @@
 import Card from "@/components/card";
+import Navbar from "@/components/navbar";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -52,26 +53,29 @@ function BlogPage() {
   }
 
   return (
-    <div className="max-w-screen-2xl mx-auto">
-      <h1 className="text-center text-3xl 2xl:text-4xl font-bold my-10 md:my-16">
-        Explore all our blogs
-      </h1>
-      {blogs.length != 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {blogs.map((i) => (
-            <Card
-              key={i._id}
-              title={i.title}
-              slug={i.slug}
-              image={i.img}
-              id={i._id}
-            />
-          ))}
-        </div>
-      ) : (
-        <div>No blogs available</div>
-      )}
-    </div>
+    <>
+      <Navbar />
+      <div className="max-w-screen-2xl mx-auto mt-20">
+        <h1 className="text-center text-3xl 2xl:text-4xl font-bold my-10 md:my-16">
+          Explore all our blogs
+        </h1>
+        {blogs.length != 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {blogs.map((i) => (
+              <Card
+                key={i._id}
+                title={i.title}
+                slug={i.slug}
+                image={i.img}
+                id={i._id}
+              />
+            ))}
+          </div>
+        ) : (
+          <div>No blogs available</div>
+        )}
+      </div>
+    </>
   );
 }
 

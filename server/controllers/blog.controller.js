@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import BlogU from "../modals/blog.modal.js";
 import User from "../modals/user.modal.js";
+import Comment from "../modals/comment.modal.js";
 
 export async function createBlog(req, res) {
   try {
@@ -67,7 +68,11 @@ export async function readBlog(req, res) {
       return res.status(400).send("Please fill your all details");
     }
 
-    const blogbyId = await BlogU.findById(data.id).populate("author");
+    const blogbyId = await BlogU.findById(data.id).populate([
+      "author",
+      "comments",
+    ]);
+
     return res.status(200).json(blogbyId);
   } catch (error) {
     console.log(error);

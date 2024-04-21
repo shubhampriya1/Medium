@@ -24,9 +24,8 @@ export function getUserData() {
   };
 }
 
-export function Logout() {
+export function logout() {
   Cookies.remove("name");
   Cookies.remove("username");
   Cookies.remove("userid");
-  window.location.href = "/";
 }

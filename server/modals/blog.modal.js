@@ -21,6 +21,12 @@ const blogScehma = mongoose.Schema({
     type: String,
     require: true,
   },
+  comments: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Comment",
+    },
+  ],
 });
 const BlogU = mongoose.model("BlogU", blogScehma);
 export default BlogU;

@@ -30,7 +30,7 @@ function Card({ image, title, slug, id }) {
           />
         </CardItem>
         <div className="flex justify-between items-center mt-5">
-          <Link to={`/blogs/${id}`}>
+          <Link to={`/blog/${id}`}>
             <CardItem
               translateZ={20}
               as="button"

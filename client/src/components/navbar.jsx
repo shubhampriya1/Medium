@@ -1,7 +1,10 @@
-import { getUserData } from "@/lib/user";
+import { getUserData, logout } from "@/lib/user";
 import { Button } from "./ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function Navbar() {
+  const navigate = useNavigate();
   const { userid } = getUserData();
 
   return (
@@ -14,13 +17,26 @@ function Navbar() {
       </div>
       <div className="flex flex-row-reverse gap-3">
         <div>
-          {userid ? <Button>Dashboard</Button> : <Button>Sign up</Button>}
+          <Link to={"/blogs"}>
+            <Button>Blogs</Button>
+          </Link>
         </div>
         <div>
           {userid ? (
-            <Button variant={"ghost"}>Logout</Button>
+            <Button
+              variant={"ghost"}
+              onClick={() => {
+                logout();
+                navigate("/login");
+                toast.success("Successfully logged in");
+              }}
+            >
+              Logout
+            </Button>
           ) : (
-            <Button variant={"ghost"}>Log in</Button>
+            <Link to={"/login"}>
+              <Button variant={"ghost"}>Log in</Button>
+            </Link>
           )}
         </div>
       </div>
