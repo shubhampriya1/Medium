@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 function BlogIdPage() {
   const param = useParams();
@@ -28,6 +29,34 @@ function BlogIdPage() {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+ 
+
+  async function onSubmit() {
+    const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
+    try {
+      await axios.delete(`${backendURL}/blog/deleteBlog/${param.id}`);
+      toast.success("Successfully deleted your Blog");
+    } catch (error) {
+      toast.error("error in deleting your blog");
+    }
+  }
+  async function addComment() {
+    const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
+    try {
+      const { data } = await axios.post(`${backendURL}/comment/addComment`, {
+        authorId: userid,
+        rating: "5",
+        blogId: param.id,
+        text: " ",
+      });
+      setComment(data);
+      console.log(data);
+      toast.success("successfully added Your comment here");
+    } catch (error) {
+      toast.error("error,Your comment is not added");
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     async function getBlog() {
@@ -101,7 +130,9 @@ function BlogIdPage() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogAction onClick={onSubmit}>
+                        Continue
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -137,8 +168,8 @@ function BlogIdPage() {
               ) : (
                 blog.comments.map((i) => (
                   <>
-                    <p>{i.ratings}</p>
-                    <p>{i.ratings}</p>
+                    {/* <p>{i.ratings}</p> */}
+                    <p>{i.text}</p>
                   </>
                 ))
               )}
@@ -147,7 +178,9 @@ function BlogIdPage() {
             {userid ? (
               <div className="mt-10 flex flex-col items-center justify-center gap-2">
                 <Textarea className="w-full h-36" />
-                <Button>Add Comment</Button>
+                <Button onClick={addComment}>Add Comment</Button>
+
+               
               </div>
             ) : (
               <div className="flex items-center justify-center mt-10">
