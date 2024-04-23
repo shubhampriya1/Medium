@@ -50,7 +50,7 @@ function LoginPage() {
     <div className="flex  items-center justify-center h-screen w-screen">
       <Card className="md:w-96  ">
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
+          <CardTitle>Login </CardTitle>
           <CardDescription>
             New to medium?{" "}
             <Link to={"/register"} className="underline">

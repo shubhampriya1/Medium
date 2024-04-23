@@ -22,6 +22,10 @@ function Navbar() {
           </Link>
         </div>
         <div>
+          <Link to={"/addBlog"}>
+          <Button>Addblogs</Button></Link>
+        </div>
+        <div>
           {userid ? (
             <Button
               variant={"ghost"}

@@ -29,7 +29,6 @@ function BlogIdPage() {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
- 
 
   async function onSubmit() {
     const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
@@ -49,7 +48,7 @@ function BlogIdPage() {
         blogId: param.id,
         text: " ",
       });
-      setComment(data);
+
       console.log(data);
       toast.success("successfully added Your comment here");
     } catch (error) {
@@ -162,25 +161,24 @@ function BlogIdPage() {
               {blog.comments.length}
               {")"}
             </h1>
-            <p>
+            <div>
               {blog.comments.length === 0 ? (
                 <>No comments yet. Be the first one to add</>
               ) : (
                 blog.comments.map((i) => (
                   <>
                     {/* <p>{i.ratings}</p> */}
-                    <p>{i.text}</p>
+                    {/* <p>{i.text}</p> */}
+                    <div>{i.text}</div>
                   </>
                 ))
               )}
-            </p>
+            </div>
 
             {userid ? (
               <div className="mt-10 flex flex-col items-center justify-center gap-2">
                 <Textarea className="w-full h-36" />
                 <Button onClick={addComment}>Add Comment</Button>
-
-               
               </div>
             ) : (
               <div className="flex items-center justify-center mt-10">
