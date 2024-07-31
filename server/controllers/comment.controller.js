@@ -9,7 +9,7 @@ export async function addComment(req, res) {
     const { authorId, rating, blogId, text } = req.body;
 
     if (!authorId || !rating || !blogId || !text) {
-      return res.status(400).send("Please fill your all details");
+      return res.status(400).send("Please fill your all details"); 
     }
     if (
       !mongoose.Types.ObjectId.isValid(authorId) ||
@@ -54,7 +54,7 @@ export async function deleteComment(req, res) {
     const { commentId, authorId } = req.body;
 
     if (!commentId || !authorId) {
-      return res.status(400).send("Please provide all error");
+      return res.status(400).send("Please provide all Details");
     }
 
     if (

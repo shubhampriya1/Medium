@@ -50,7 +50,6 @@ export async function deleteBlog(req, res) {
     if (!data.id) {
       return res.status(400).send("Please fill your all details");
     }
-
     await BlogU.findByIdAndDelete(data.id);
 
     return res.status(200).send("Your blog deleted succesfully");
@@ -72,7 +71,6 @@ export async function readBlog(req, res) {
       "author",
       "comments",
     ]);
-
     return res.status(200).json(blogbyId);
   } catch (error) {
     console.log(error);
