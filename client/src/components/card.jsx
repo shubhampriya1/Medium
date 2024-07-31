@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
+import { Trash } from "lucide-react";
+import axios from "axios";
+import { toast } from "sonner";
 
 function Card({ image, title, slug, id }) {
   return (
