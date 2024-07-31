@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { Edit, Loader2, Trash, TriangleAlert } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/navbar";
 import { getUserData } from "@/lib/user";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import Rating from "react-rating-stars-component";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +25,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import "./comment.css";
+import CommentCard from "@/components/Comment";
+import StarIcon from "@/components/ui/StarIcon";
 
 function BlogIdPage() {
   const param = useParams();
@@ -32,7 +35,7 @@ function BlogIdPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [comment, setComment] = useState();
-  const [rating, setRating] = useState(null);
+  const [rating, setRating] = useState(0);
 
   async function onSubmit() {
     const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
@@ -47,38 +50,20 @@ function BlogIdPage() {
   async function addComment() {
     const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
     try {
-      const { data } = await axios.post(`${backendURL}/comment/addComment`, {
+      await axios.post(`${backendURL}/comment/addComment`, {
         authorId: userid,
-        rating: rating.toString(),
+        rating: rating,
         blogId: param.id,
         text: comment,
       });
 
-      console.log(data);
-      setRating(0);
+      window.location.reload(false);
       toast.success("successfully added Your comment here");
     } catch (error) {
-      toast.error("error,Your comment is not added");
-      console.log(error);
+      toast.error("Your comment is not added");
     }
   }
-  async function deleteComment(commentId, authorId) {
-    const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
-    try {
-      const res = await axios.delete(`${backendURL}/comment/delete`, {
-        data: { commentId, authorId: userid },
-      });
-      if (res.status === 200) {
-        console.log("Comment deleted successfully");
-      } else {
-        console.log("Failed to delete comment");
-      }
-      toast.success("Succesfully your comment is deleted");
-    } catch (error) {
-      toast.error(error);
-      console.error("Error deleting comment:", error);
-    }
-  }
+
   useEffect(() => {
     async function getBlog() {
       try {
@@ -87,9 +72,7 @@ function BlogIdPage() {
           `${import.meta.env.VITE_PUBLIC_BACKEND_URL}/blog/getBlog/${param.id}`
         );
         setBlog(data);
-        console.log(data);
       } catch (error) {
-        console.log(error);
         setError(true);
       } finally {
         setLoading(false);
@@ -97,7 +80,7 @@ function BlogIdPage() {
     }
 
     getBlog();
-  }, []);
+  }, [param]);
 
   const { userid } = getUserData();
 
@@ -131,7 +114,7 @@ function BlogIdPage() {
           <div className="flex items-center justify-between my-10">
             <h1 className="text-3xl">{blog.title}</h1>
 
-            {blog.author._id === userid ? (
+            {blog?.author?._id === userid ? (
               <div className="flex gap-2">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -184,55 +167,59 @@ function BlogIdPage() {
               {")"}
             </h1>
             <div>
-              {blog.comments.length === 0 ? (
+              {blog?.comments?.length === 0 ? (
                 <>No comments yet. Be the first one to add</>
               ) : (
-                blog.comments.map((comment) => (
-                  <div
+                blog?.comments?.map((comment) => (
+                  <CommentCard
                     key={comment._id}
-                    className="mb-4 border-7 flex ml-2 border border-gray-300 rounded-lg p-4 ml-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={
-                          "https://www.drupal.org/files/user-pictures/picture-571032-1578484601.jpg"
-                        }
-                        alt="avatar"
-                        className="w-10 h-10 rounded-full"
-                      />
-                    </div>
-
-                    <div className="flex">
-                      <p className="mt-2 ml-4">{comment.text}</p>
-                    </div>
-                    <div className="flex ml-[350px]">
-                      <Rating
-                        classNames="flex "
-                        count={5}
-                        size={24}
-                        activeColor="#ffd700"
-                        value={rating}
-                        onChange={(newRating) => setRating(newRating)}
-                      />
-                      <Trash
-                        className="mt-3"
-                        onClick={() => deleteComment(comment._id)}
-                      />
-                    </div>
-                  </div>
+                    name={comment?.author?.name}
+                    userName={comment?.author?.username}
+                    rating={comment?.rating}
+                    commentId={comment?._id}
+                    text={comment?.text}
+                  />
                 ))
               )}
             </div>
 
             {userid ? (
-              <div className="mt-10 flex flex-col items-center justify-center gap-2">
-                <Textarea
-                  className="w-full h-36"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-
-                <Button onClick={addComment}>Add Comment</Button>
+              <div className="mt-20">
+                <h1 className="text-2xl font-medium mb-5">
+                  Share your thoughts
+                </h1>
+                <div className="w-full flex items-center justify-center">
+                  <div className="grid w-full items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`transition-colors ${
+                            i <= rating
+                              ? "text-yellow-400 fill-primary"
+                              : "text-gray-400 fill-muted stroke-muted-foreground"
+                          } hover:text-yellow-500 focus:text-yellow-500`}
+                          onClick={() => setRating(i)}
+                        >
+                          <StarIcon className="w-6 h-6" />
+                        </button>
+                      ))}
+                    </div>
+                    <div>
+                      <Label htmlFor="feedback">Comments</Label>
+                      <Textarea
+                        id="feedback"
+                        name="feedback"
+                        placeholder="Share your thoughts..."
+                        className="mt-1"
+                        rows={3}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                    </div>
+                    <Button onClick={addComment}>Submit</Button>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="flex items-center justify-center mt-10">
