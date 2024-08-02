@@ -61,23 +61,28 @@ export async function deleteBlog(req, res) {
 
 export async function readBlog(req, res) {
   try {
-    const data = req.params;
+    const { id } = req.params;
 
-    if (!data.id) {
+    if (!id) {
       return res.status(400).send("Please fill your all details");
     }
 
-    const blogbyId = await BlogU.findById(data.id).populate([
-      "author",
-      "comments",
-    ]);
+    const blogbyId = await BlogU.findById(id)
+      .populate("author")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          model: "User",
+        },
+      });
+
     return res.status(200).json(blogbyId);
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");
   }
 }
-
 export async function readALLBlog(_, res) {
   try {
     const blogs = await BlogU.find().populate("author");
