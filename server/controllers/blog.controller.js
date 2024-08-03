@@ -83,10 +83,26 @@ export async function readBlog(req, res) {
     return res.status(500).send("Internal server error");
   }
 }
-export async function readALLBlog(_, res) {
+export async function readALLBlog(req, res) {
   try {
-    const blogs = await BlogU.find().populate("author");
-    return res.status(200).json(blogs);
+    const { page = 1, pageSize = 10 } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const size = parseInt(pageSize, 10);
+
+    const skip = (pageNumber - 1) * size;
+
+    const totalDocuments = await BlogU.countDocuments();
+
+    const blogs = await BlogU.find().populate("author").skip(skip).limit(size);
+
+    return res.status(200).json({
+      totalDocuments,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(totalDocuments / size),
+      pageSize: size,
+      blogs,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");
