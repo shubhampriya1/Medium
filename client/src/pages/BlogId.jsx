@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { Edit, Loader2, Trash, TriangleAlert } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,8 +36,6 @@ function BlogIdPage() {
   const [error, setError] = useState(false);
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
-
-  const navigate = useNavigate();
 
   async function onSubmit() {
     const backendURL = import.meta.env.VITE_PUBLIC_BACKEND_URL;
@@ -94,7 +92,7 @@ function BlogIdPage() {
     );
   }
 
-  if (error || !blog) {
+  if (error) {
     return (
       <div className="h-screen w-screen flex items-center justify-center flex-col gap-20">
         <div className="flex flex-col items-center justify-center">
@@ -142,13 +140,7 @@ function BlogIdPage() {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    navigate(`/addBlog?blogId=${param.id}`);
-                  }}
-                >
+                <Button variant={"ghost"} size={"icon"}>
                   <Edit />
                 </Button>
               </div>
@@ -225,9 +217,7 @@ function BlogIdPage() {
                         onChange={(e) => setComment(e.target.value)}
                       />
                     </div>
-                    <Button onClick={addComment} disabled={!rating || !comment}>
-                      Submit
-                    </Button>
+                    <Button onClick={addComment}>Submit</Button>
                   </div>
                 </div>
               </div>
