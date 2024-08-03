@@ -1,11 +1,11 @@
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
-import PropTypes from "prop-types";
 import { getUserData } from "@/lib/user";
 import axios from "axios";
+import { User } from "lucide-react";
+import PropTypes from "prop-types";
 import { toast } from "sonner";
 
 CommentCard.propTypes = {
@@ -25,7 +25,7 @@ export default function CommentCard({
 }) {
   const totalStars = 5;
 
-  const { userid } = getUserData();
+  const { userid, name: username } = getUserData();
 
   // Generate an array of star components based on the rating
   const stars = Array.from({ length: totalStars }, (_, index) => {
@@ -61,12 +61,9 @@ export default function CommentCard({
   }
 
   return (
-    <Card className="w-full p-6 grid gap-6">
+    <Card className="w-full p-6 grid gap-6 my-5">
       <div className="flex items-start gap-4 relative">
-        <Avatar className="w-12 h-12 border">
-          <AvatarImage src="/placeholder-user.jpg" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <User className="w-10 h-10  border-[1px] rounded-full p-1" />
         <div className="grid gap-2 flex-1">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5">{stars}</div>
@@ -81,7 +78,10 @@ export default function CommentCard({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-0 right-0"
+          className={
+            "absolute top-0 right-0" + (username !== userName ? " hidden" : "")
+          }
+          disabled={username !== userName}
           onClick={deleteComment}
         >
           <XIcon className="w-4 h-4" />

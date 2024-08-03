@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export function setUserData(name, username, userid) {
   Cookies.set("name", name, {
@@ -28,4 +29,6 @@ export function logout() {
   Cookies.remove("name");
   Cookies.remove("username");
   Cookies.remove("userid");
+  toast.success("Successfully logged out");
+  window.location.reload(false);
 }
