@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getUserData } from "@/lib/user";
-import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/navbar";
+import JoditEditor from "jodit-react";
+import { useTheme } from "@/providers/theme-utils";
 
 const AddBlog = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -18,6 +19,8 @@ const AddBlog = () => {
   const [img, setImg] = useState("");
   const [content, setContent] = useState("");
   const [loading, setloading] = useState(false);
+
+  const { theme } = useTheme();
 
   const navigate = useNavigate();
 
@@ -37,6 +40,9 @@ const AddBlog = () => {
           `${import.meta.env.VITE_PUBLIC_BACKEND_URL}/blog/getBlog/${blogId}`
         )
         .then((res) => {
+          if (res.data.author._id !== userid) {
+            navigate("/blogs");
+          }
           const { title, slug, img, content } = res.data;
           setTitle(title);
           setSlug(slug);
@@ -51,6 +57,23 @@ const AddBlog = () => {
         });
     }
   }, [blogId]);
+
+  const editor = useRef(null);
+
+  const config = useMemo(
+    () => ({
+      readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+      placeholder: "Express your thoughts",
+      height: 500,
+      theme: theme, // Enable dark theme
+      style: {
+        backgroundColor: theme === "dark" ? "#080c14" : "#fff",
+        color: theme === "dark" ? "#fff" : "#080c14",
+        width: "100%",
+      },
+    }),
+    [theme]
+  );
 
   const disabled =
     title.length < 10 ||
@@ -120,7 +143,7 @@ const AddBlog = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-screen-xl md:mx-10 sm:mx-10 space-y-5 mx-3 my-20">
+      <div className="max-w-screen-lg mx-auto space-y-10 my-20">
         <h1 className="text-2xl text-center my-6">Write your blog</h1>
         <div className="grid w-full items-center gap-4">
           <div className="flex flex-col items-start gap-1 space-y-1.5">
@@ -170,10 +193,13 @@ const AddBlog = () => {
         <div className="grid w-full items-center gap-4 mb-20">
           <div className="flex flex-col items-start gap-1 space-y-1.5">
             <Label htmlFor="content">Blog Content</Label>
-            <Textarea
-              className="w-full h-96"
+            <JoditEditor
+              ref={editor}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              config={config}
+              tabIndex={1}
+              onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+              onChange={(newContent) => setContent(newContent)}
             />
 
             <p className="text-xs text-muted-foreground pl-3">
